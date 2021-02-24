@@ -108,22 +108,31 @@ bool MeshFitCloudPoseSrv(point_cloud_tools::MeshToCloudPose::Request &req, point
     }
   
   pcl_conversions::toPCL(req.object_cloud, tempCloud);
+  std::cout << "line 111" << std::endl;
   pcl::fromPCLPointCloud2(tempCloud, *camera_object_cloud);
+  std::cout << "line 113" << std::endl;
 
   pcl_conversions::toPCL(req.table_cloud, tempCloud);
   pcl::fromPCLPointCloud2(tempCloud, *camera_table_cloud);
 
+  std::cout << "line 118" << std::endl;
   processSensorClouds(camera_object_cloud,camera_table_cloud,camera_processed_cloud);
-  
+  std::cout << "line 120" << std::endl;
+
   pcl::PolygonMesh::Ptr stl_file(new pcl::PolygonMesh);
+  std::cout << "line 123" << std::endl;
+  std::cout << "mesh path: " << req.mesh_path << endl;
   if(pcl::io::loadPolygonFileSTL(req.mesh_path, *stl_file) < 0)
     {
+      std::cout << "line 126" << std::endl;
       std::stringstream Error;
       Error << "\"" << req.mesh_path <<"\" "  << "File Not Found";
       ROS_INFO(Error.str().c_str());
       return false;
     }
+  std::cout << "line 132" << std::endl;
   pcl::fromPCLPointCloud2(stl_file->cloud, *full_object_cloud);
+  std::cout << "line 134" << std::endl;
 
   if(debug_)
     ROS_INFO("Loaded Clouds");
