@@ -120,7 +120,7 @@ bool MeshFitCloudPoseSrv(point_cloud_tools::MeshToCloudPose::Request &req, point
     {
       std::stringstream Error;
       Error << "\"" << req.mesh_path <<"\" "  << "File Not Found";
-      //TODO uncomment ROS_INFO(Error.str().c_str());
+      ROS_INFO(Error.str().c_str());
       return false;
     }
   pcl::fromPCLPointCloud2(stl_file->cloud, *full_object_cloud);
