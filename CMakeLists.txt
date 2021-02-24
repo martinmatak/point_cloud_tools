@@ -16,7 +16,6 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
   tf
   tf_conversions
-  multiobject_spatial_placement_planner
 )
 
 
@@ -41,9 +40,11 @@ catkin_package(
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
   ${PCL_INCLUDE_DIRS}
 )
 
+add_library(transformation_analyzation src/transformation_analyzation.cpp)
 
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
@@ -52,4 +53,4 @@ add_executable(ICPPoseDemo src/ICPPoseDemo.cpp)
 target_link_libraries(ICPPoseDemo ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 add_executable(ICPMeshtoCloudSrv src/icp_mesh_to_cloud_pose_server.cpp)
-target_link_libraries(ICPMeshtoCloudSrv ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${PCL_LIBRARIES})
+target_link_libraries(ICPMeshtoCloudSrv transformation_analyzation ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} ${PCL_LIBRARIES})

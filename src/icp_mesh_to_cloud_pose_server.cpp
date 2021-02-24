@@ -14,7 +14,7 @@
 #include <point_cloud_tools/MeshToCloudPose.h>
 #include <ros/ros.h>
 
-#include <multi_obj/transformation_analyzation.h>
+#include <transformation_analyzation.h>
 
 
 bool debug_;
@@ -120,7 +120,7 @@ bool MeshFitCloudPoseSrv(point_cloud_tools::MeshToCloudPose::Request &req, point
     {
       std::stringstream Error;
       Error << "\"" << req.mesh_path <<"\" "  << "File Not Found";
-      ROS_INFO(Error.str().c_str());
+      //TODO uncomment ROS_INFO(Error.str().c_str());
       return false;
     }
   pcl::fromPCLPointCloud2(stl_file->cloud, *full_object_cloud);
