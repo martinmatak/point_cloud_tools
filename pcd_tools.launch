@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+
+<launch>
+	<node name="icp_mesh_to_cloud_pose_server" pkg="point_cloud_tools" type="ICPMeshtoCloudSrv" output="screen"/>
+</launch>
