@@ -18,9 +18,11 @@ def main():
     req = rospy.ServiceProxy(SERVICE_NAME, MeshToCloudPose)
 
     object_cloud = PointCloud.from_path(CLOUD_PATH)
-   
+    # TODO: get true "table cloud", why ?
     table_cloud = PointCloud.from_path(CLOUD_PATH)
+
     resp=req(MESH_PATH, object_cloud.to_msg(), table_cloud.to_msg())
+
     print("service response [start]")
     print(resp)
     print("service response [end]")
