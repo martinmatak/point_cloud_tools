@@ -50,5 +50,4 @@
 # CMA data files- Uncomment if required
 #*.dat
 
-data/*
 docs/*
