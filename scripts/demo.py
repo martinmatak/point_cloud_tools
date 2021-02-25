@@ -18,8 +18,13 @@ def main():
     req = rospy.ServiceProxy(SERVICE_NAME, MeshToCloudPose)
 
     object_cloud = PointCloud.from_path(CLOUD_PATH)
-    # TODO: get true "table cloud", why ?
-    table_cloud = PointCloud.from_path(CLOUD_PATH)
+
+    # Allegedly, the algorithm leverages cloud of the table 
+    # to resolve a problem of the object's mesh being flipped.
+    #
+    # As soon as I encounter an example that flips it, I'll update this code accordingly.
+    # Until then, I'll use object cloud as table cloud.
+    table_cloud = object_cloud
 
     resp=req(MESH_PATH, object_cloud.to_msg(), table_cloud.to_msg())
 
