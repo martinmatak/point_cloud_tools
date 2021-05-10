@@ -14,6 +14,8 @@
 #include <point_cloud_tools/MeshToCloudPose.h>
 #include <ros/ros.h>
 
+#include <chrono>
+#include <random>
 #include <transformation_analyzation.h>
 
 
@@ -141,11 +143,52 @@ bool MeshFitCloudPoseSrv(point_cloud_tools::MeshToCloudPose::Request &req, point
   icp.setRANSACOutlierRejectionThreshold(0.001);
 
   pcl::getMinMax3D(*camera_processed_cloud, minPt, maxPt);
-  
-  guess << 1,0,0,-(minPt.x+maxPt.x)*0.5,
-    0,1,0,-(minPt.y+maxPt.y)*0.5,
-    0,0,1,-minPt.z,
-    0,0,0,1;
+
+  // get a random initial seed 
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  std::default_random_engine generator(seed);
+  std::uniform_real_distribution<double> distribution(0.0,1.0);
+  double number = distribution(generator);
+
+  std::cout << std::to_string(number) << std::endl;
+
+  if (number < 0.1)
+  {
+    guess << 0,1,0,(minPt.x+maxPt.x)*0.5,
+	     1,0,0,(minPt.y+maxPt.y)*0.5,
+	     0,0,1,(minPt.z+maxPt.z)*0.5,
+	     0,0,0,1;
+  }
+  else if (number < 0.2)
+  {
+    guess << 0,0,1,-(minPt.x+maxPt.x)*0.5,
+	     0,1,0,-(minPt.y+maxPt.y)*0.5,
+	     1,0,0,-(minPt.z+maxPt.z)*0.5,
+	     0,0,0,1;
+  } else if (number < 0.4){
+    guess << 0,1,0,-(minPt.x+maxPt.x)*0.5,
+	     0,0,1,-(minPt.y+maxPt.y)*0.5,
+	     1,0,0,-minPt.z,
+	     0,0,0,1;
+  } else if (number < 0.6){
+    guess << 1,0,0,-(minPt.x+maxPt.x)*0.5,
+	     0,1,0,-minPt.y,
+	     0,0,1,-(minPt.z+maxPt.z)*0.5,
+	     0,0,0,1;
+  }
+  else if (number < 0.8){
+    guess << 1,0,0,-minPt.x,
+	     0,1,0,-(minPt.y+maxPt.y)*0.5,
+	     0,0,1,-(minPt.z+maxPt.z)*0.5,
+	     0,0,0,1;
+
+  } else {
+    guess << 1,0,0,(maxPt.x - minPt.x) * number,
+	     0,1,0,-(minPt.y+maxPt.y)*number,
+	     0,0,1,-(minPt.z+maxPt.z)*number,
+	     0,0,0,1;
+  }
+
     
   icp.align(Final, guess);
   Final.header.frame_id = "world";
